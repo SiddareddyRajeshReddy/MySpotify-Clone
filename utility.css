@@ -37,7 +37,9 @@
 .justify-end{
     justify-content: end;
 }
-
+.invisibility{
+  visibility: hidden;
+}
 /* 1. Completely remove scrollbar arrows */
 ::-webkit-scrollbar-button {
   display: none !important;
