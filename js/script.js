@@ -1,4 +1,6 @@
 console.log("Its okay")
+const JSON_PATH = '/json';
+const SONGS_PATH = '/songs';
 let currentPlayingElement
 let currentSong = new Audio();
 let play = document.querySelector('#play')
@@ -11,45 +13,29 @@ let load = false
 let tid;
 let playlist = document.querySelector(".playlist")
 async function getSongs() {
-    let b = await fetch(`/songs/${folder}/`, {
+    let b = await fetch(`${JSON_PATH}/songs.json`, {
         headers: {
             'Origin': window.location.origin,
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    let response = await b.text()
-    // console.log(response)
-    let div = document.createElement("div")
-    div.innerHTML = response
-    let as = div.getElementsByTagName("a")
-    // console.log(as)
-    let songs = []
-    for (const a of as) {
-        if (a.href.endsWith(".mp3")) {
-            songs.push(a.href)
-        }
-    }
-    // console.log(songs)
+    let response = await b.json()
+    const album = response.albums.find(a=>a.name == folder);
+    songs = album.songs.map(song => `${SONGS_PATH}/${encodeURIComponent(folder)}/${encodeURIComponent(song.file)}`)
+    console.log(songs)
     return songs
 }
-async function getFolders(params) {
-    let b = await fetch("/songs/", {
+async function getFolders() {
+    let b = await fetch(`${JSON_PATH}/folders.json`, {
         headers: {
             'Origin': window.location.origin,
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    let response = await b.text() 
+    let response = await b.json() 
     let div = document.createElement("div")
     console.log(response)
-    div.innerHTML = response
-    let as = div.getElementsByTagName("a")
-    let folders = [];
-    for (const a of as) {
-        if (a.href.includes("songs")) {
-            folders.push(a.href.split("/songs/")[1].slice(0, -1).replaceAll("%20", " "))
-        }
-    }
+    folders = response.folders.map(folder => folder.name)
     return folders
 }
 function formatTime(seconds) {
