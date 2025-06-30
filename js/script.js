@@ -1,4 +1,5 @@
 console.log("Its okay")
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 let currentPlayingElement
 let currentSong = new Audio();
 let play = document.querySelector('#play')
@@ -11,7 +12,7 @@ let load = false
 let tid;
 let playlist = document.querySelector(".playlist")
 async function getSongs() {
-    let b = await fetch(`http://127.0.0.1:3000/songs/${folder.replaceAll(" ", "%20")}/`)
+    let b = await fetch( proxyUrl +`http://127.0.0.1:3000/songs/${folder.replaceAll(" ", "%20")}/`)
     let response = await b.text()
     // console.log(response)
     let div = document.createElement("div")
@@ -28,7 +29,7 @@ async function getSongs() {
     return songs
 }
 async function getFolders(params) {
-    let b = await fetch("http://127.0.0.1:3000/songs/")
+    let b = await fetch(proxyUrl + "http://127.0.0.1:3000/songs/")
     let response = await b.text()
     let div = document.createElement("div")
     div.innerHTML = response
@@ -110,7 +111,7 @@ function setVolumeByKeys(key) {
     document.querySelector(".volume").getElementsByTagName("img")[0].src = img;
 }
 function playMusic(music) {
-    if (currentSong.src == `http://127.0.0.1:3000/songs/${folder.replaceAll(" ", "%20")}/${music.replaceAll(" ", "%20")}.mp3`) {
+    if (currentSong.src == proxyUrl + `http://127.0.0.1:3000/songs/${folder.replaceAll(" ", "%20")}/${music.replaceAll(" ", "%20")}.mp3`) {
         playPause()
     }
     else {
@@ -300,7 +301,7 @@ async function loadFolder() {
     await Promise.all(folders.map(async fol => {
         let newDiv = document.createElement("div")
         let folderName = fol
-        let b = await fetch(`http://127.0.0.1:3000/songs/${folderName.replaceAll(" ","%20")}/info.json`)
+        let b = await fetch( proxyUrl+ `http://127.0.0.1:3000/songs/${folderName.replaceAll(" ","%20")}/info.json`)
         let metadata = await b.json()
         newDiv.innerHTML = `<div class="play-wrapper"> <div class="play-button"><img src="./img/play-icon.svg" alt="Play"> </div></div>  <img  class="invert" style="z-index: 0;" src="./img/musicNav.svg" alt=""><h2></h2><p>Hariharan</p>`
         newDiv.getElementsByTagName("h2")[0].innerHTML = metadata.title;
