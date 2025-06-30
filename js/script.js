@@ -39,9 +39,9 @@ async function getFolders(params) {
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    let response = await b.text()
-    console.log(response)
+    let response = await b.text() 
     let div = document.createElement("div")
+    console.log(response)
     div.innerHTML = response
     let as = div.getElementsByTagName("a")
     let folders = [];
