@@ -332,6 +332,7 @@ async function loadFolder() {
 async function main() {
     //Getting list of all
     folders = await getFolders("songs")
+    console.log(folders)
     await loadFolder()
     folder = playlist.firstElementChild.getElementsByTagName("h2")[0].innerHTML
     loadSongs(folder)
