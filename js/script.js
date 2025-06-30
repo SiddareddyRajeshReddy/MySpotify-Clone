@@ -1,5 +1,4 @@
 console.log("Its okay")
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 let currentPlayingElement
 let currentSong = new Audio();
 let play = document.querySelector('#play')
@@ -12,7 +11,12 @@ let load = false
 let tid;
 let playlist = document.querySelector(".playlist")
 async function getSongs() {
-    let b = await fetch( proxyUrl +`http://127.0.0.1:3000/songs/${folder.replaceAll(" ", "%20")}/`)
+    let b = await fetch(`/songs/${folder}/`, {
+        headers: {
+            'Origin': window.location.origin,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
     let response = await b.text()
     // console.log(response)
     let div = document.createElement("div")
@@ -29,7 +33,12 @@ async function getSongs() {
     return songs
 }
 async function getFolders(params) {
-    let b = await fetch(proxyUrl + "http://127.0.0.1:3000/songs/")
+    let b = await fetch("/songs/", {
+        headers: {
+            'Origin': window.location.origin,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
     let response = await b.text()
     let div = document.createElement("div")
     div.innerHTML = response
@@ -57,7 +66,7 @@ function formatTime(seconds) {
     return `${formattedMins}:${formattedSecs}`;
 }
 function opac() {
-    if (currentPlayingElement.previousElementSibling == null) {
+    if (currentPlayingElement.prevElementSibling == null) {
         document.querySelector("#prev").style.opacity = "0.5"
     }
     else {
@@ -111,11 +120,11 @@ function setVolumeByKeys(key) {
     document.querySelector(".volume").getElementsByTagName("img")[0].src = img;
 }
 function playMusic(music) {
-    if (currentSong.src == proxyUrl + `http://127.0.0.1:3000/songs/${folder.replaceAll(" ", "%20")}/${music.replaceAll(" ", "%20")}.mp3`) {
+    if (currentSong.src.endsWith(`/songs/${folder.replaceAll(" ", "%20")}/${music.replaceAll(" ", "%20")}.mp3`)){
         playPause()
     }
     else {
-        currentSong.src = `songs/${folder}/${music}.mp3`
+        currentSong.src = `/songs/${folder}/${music}.mp3`
         console.log(currentSong.src)
         setVolume()
         currentSong.play()
@@ -222,14 +231,13 @@ function components() {
                 tid = setTimeout(e => {
                     document.querySelector(".volumeBar").classList.add("invisibility")
                 }, 3000)
-                if(currentSong.volume > 0)
-                {
+                if (currentSong.volume > 0) {
                     document.querySelector(".volume").getElementsByTagName("img")[0].src = "./img/volumeMute.svg"
                     document.querySelector(".square").style.height = 0;
                     currentSong.volume = 0
                     console.log(currentSong.volume)
                 }
-                else{
+                else {
                     document.querySelector(".volume").getElementsByTagName("img")[0].src = "./img/volumeHigh.svg"
                     document.querySelector(".square").style.height = "100%"
                     currentSong.volume = 1
@@ -257,7 +265,7 @@ function components() {
 }
 async function loadSongs(folder) {
     songs = await getSongs(folder)
-       for (const song of songs) {
+    for (const song of songs) {
         let audio = new Audio(song)
         let newLi = document.createElement("li")
         let newimg = document.createElement("img")
@@ -282,13 +290,13 @@ async function loadSongs(folder) {
             playMusic(songName)
         })
     })
-    currentSong.src = `./songs/${folder}/${songListUi[0].getElementsByTagName("div")[0].getElementsByTagName("p")[0].innerHTML}.mp3`;
+    currentSong.src = `/songs/${folder}/${songListUi[0].getElementsByTagName("div")[0].getElementsByTagName("p")[0].innerHTML}.mp3`;
     currentSong.currentTime = 0;
     currentPlayingElement = songListUi[0]
     opac()
     console.log(folder)
     console.log(currentSong.src)
-    document.querySelector(".songinfo").innerHTML = `<img class="invert" src='./img/musicNav.svg'><p>${currentSong.src.split(`/${folder.replaceAll(" ","%20")}/`)[1].toUpperCase().replaceAll("%20", " ")}</p>`
+    document.querySelector(".songinfo").innerHTML = `<img class="invert" src='./img/musicNav.svg'><p>${currentSong.src.split(`/${folder.replaceAll(" ", "%20")}/`)[1].toUpperCase().replaceAll("%20", " ")}</p>`
     const IcurrentTime = formatTime(currentSong.currentTime);
     const Iduration = isNaN(currentSong.duration) ? "00:00" : formatTime(currentSong.duration);
     play.src = "./img/play.svg"
@@ -301,7 +309,12 @@ async function loadFolder() {
     await Promise.all(folders.map(async fol => {
         let newDiv = document.createElement("div")
         let folderName = fol
-        let b = await fetch( proxyUrl+ `http://127.0.0.1:3000/songs/${folderName.replaceAll(" ","%20")}/info.json`)
+        let b = await fetch(`/songs/${folderName.replaceAll(" ", "%20")}/info.json`, {
+            headers: {
+                'Origin': window.location.origin,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
         let metadata = await b.json()
         newDiv.innerHTML = `<div class="play-wrapper"> <div class="play-button"><img src="./img/play-icon.svg" alt="Play"> </div></div>  <img  class="invert" style="z-index: 0;" src="./img/musicNav.svg" alt=""><h2></h2><p>Hariharan</p>`
         newDiv.getElementsByTagName("h2")[0].innerHTML = metadata.title;
