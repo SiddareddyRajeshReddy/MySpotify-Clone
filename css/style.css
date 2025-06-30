@@ -80,7 +80,7 @@ body {
     background-color: #22343454;
     margin-left: 7px;
     position: relative;
-    max-height: 80vh;
+    max-height: 100vh;
     padding: 13px;
     overflow-y: scroll;
 }
@@ -713,4 +713,4 @@ nav {
     .close {
         visibility: hidden !important;
     }
-}
+} 
