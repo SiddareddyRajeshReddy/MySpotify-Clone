@@ -40,6 +40,7 @@ async function getFolders(params) {
         }
     })
     let response = await b.text()
+    console.log(response)
     let div = document.createElement("div")
     div.innerHTML = response
     let as = div.getElementsByTagName("a")
