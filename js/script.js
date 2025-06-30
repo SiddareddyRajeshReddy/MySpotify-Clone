@@ -116,7 +116,7 @@ function playMusic(music) {
         setVolume()
         currentSong.play()
         console.log(music.concat(".mp3").toUpperCase())
-        play.src = './pause.svg';
+        play.src = './img/pause.svg';
         document.querySelector(".songinfo").innerHTML = `<img class="invert" src='./img/musicNav.svg'><p>${music.concat(".mp3").toUpperCase().replaceAll("%20", " ")}</p>`
         document.querySelectorAll('.songCard img[src$="./img/play.svg"], .songCard img[src$="./img/pause.svg"]').forEach(img => {
             img.src = './img/play.svg';
@@ -258,7 +258,7 @@ async function loadSongs(folder) {
         let newimg = document.createElement("img")
         let newDiv = document.createElement("div")
         let src = './img/play.svg'
-        newDiv.innerHTML = `<div><p>${audio.src.split(`/songs/${folder.replaceAll(" ", "%20")}/`)[1].split('.mp3')[0].replaceAll('%20', ' ')}</p><p style="font-size: 9px;">${folder}</p></div><div class="flex items-center" style="gap: 10px; font-size: 14px;"><p>Play Now</p><img class="invert" src='${src}'></div>`
+        newDiv.innerHTML = `<div><p>${audio.src.split(`/songs/${folder.replaceAll(" ", "%20")}/`)[1].split('.mp3')[0].replaceAll("%2520", " ")}</p><p style="font-size: 9px;">${folder}</p></div><div class="flex items-center" style="gap: 10px; font-size: 14px;"><p>Play Now</p><img class="invert" src='${src}'></div>`
         newDiv.classList.add('flex', 'justify-between', 'items-center', 'songCardDiv')
         newimg.src = './img/music.svg'
         newimg.classList.add('invert')
